@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://mnn4x6mkgq8h"]
+
+[ext_resource type="Texture2D" uid="uid://bubiokecv02fh" path="res://World/clouds.png" id="1_eir1t"]
+
+[node name="ParallaxBackground" type="ParallaxBackground"]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="."]
+
+[node name="Clouds" type="Sprite2D" parent="ParallaxLayer"]
+texture = ExtResource("1_eir1t")
