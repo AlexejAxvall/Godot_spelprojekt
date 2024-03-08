@@ -18,7 +18,7 @@ scale = Vector2(10.2679, 2.13158)
 texture = ExtResource("1_qhusp")
 
 [node name="Parallax_Clouds" type="ParallaxLayer" parent="."]
-motion_scale = Vector2(0.2, 0.2)
+motion_scale = Vector2(0.1, 0.1)
 motion_mirroring = Vector2(1080, 0)
 
 [node name="Clouds" type="Sprite2D" parent="Parallax_Clouds"]
@@ -29,8 +29,20 @@ texture = ExtResource("1_eir1t")
 position = Vector2(815, 205)
 texture = ExtResource("1_eir1t")
 
+[node name="Parallax_Clouds2" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.1, 0.1)
+motion_mirroring = Vector2(1080, 0)
+
+[node name="Clouds" type="Sprite2D" parent="Parallax_Clouds2"]
+position = Vector2(275, 205)
+texture = ExtResource("1_eir1t")
+
+[node name="Clouds2" type="Sprite2D" parent="Parallax_Clouds2"]
+position = Vector2(815, 205)
+texture = ExtResource("1_eir1t")
+
 [node name="Parallax_Sea" type="ParallaxLayer" parent="."]
-motion_scale = Vector2(0.5, 0.5)
+motion_scale = Vector2(0.3, 0.3)
 motion_mirroring = Vector2(1080, 0)
 
 [node name="Sea" type="Sprite2D" parent="Parallax_Sea"]
