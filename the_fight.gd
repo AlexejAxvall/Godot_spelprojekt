@@ -1,5 +1,6 @@
 extends Node2D
 
+@onready var player = get_node("Player1");
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -7,9 +8,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	print(player.position)
-	
-@onready var player = get_node("Player1");
+	pass
 
 func start_respawn_cooldown(which_player):
 	$Timer.start(3)
@@ -17,9 +16,16 @@ func start_respawn_cooldown(which_player):
 		player = get_node("Player1")
 	if which_player == 2:
 		player = get_node("Player2")
+	player.health = 10;
 
 func _on_timer_timeout():
-	respawn_player(player)
+	respawn_player()
 
-func respawn_player(player):
-	player.process_mode = 4
+func respawn_player():
+	print("Out of bounds")
+	player.process_mode = Node.PROCESS_MODE_INHERIT
+	print(player.position)
+	player.position.x = 600
+	player.position.y = 300
+	player.show()
+	player.not_dead = true;

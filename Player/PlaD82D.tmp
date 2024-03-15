@@ -340,36 +340,3 @@ libraries = {
 "": SubResource("AnimationLibrary_uneiq")
 }
 autoplay = "Idle"
-
-[node name="Timer_stuck_lying_on_ground" type="Timer" parent="."]
-
-[node name="Timer_tumble" type="Timer" parent="."]
-
-[node name="Timer_jab" type="Timer" parent="."]
-
-[node name="Timer_up-tilt" type="Timer" parent="."]
-
-[node name="Timer_down-tilt" type="Timer" parent="."]
-
-[node name="Timer_back-tilt" type="Timer" parent="."]
-
-[node name="Timer_forward-tilt" type="Timer" parent="."]
-
-[node name="Timer_neutral-air" type="Timer" parent="."]
-
-[node name="Timer_up-air" type="Timer" parent="."]
-
-[node name="Timer_down-air" type="Timer" parent="."]
-
-[node name="Timer_back-air" type="Timer" parent="."]
-
-[node name="Timer_forward-air" type="Timer" parent="."]
-
-[node name="Timer_grab" type="Timer" parent="."]
-
-[node name="Timer_shield" type="Timer" parent="."]
-
-[node name="Timer_dodge" type="Timer" parent="."]
-
-[connection signal="timeout" from="Timer_stuck_lying_on_ground" to="." method="_on_timer_timeout"]
-[connection signal="timeout" from="Timer_tumble" to="." method="_on_tumbling_timer_timeout"]
