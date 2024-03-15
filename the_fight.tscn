@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://cls255nea01hp"]
+[gd_scene load_steps=9 format=3 uid="uid://cls255nea01hp"]
 
+[ext_resource type="Script" path="res://the_fight.gd" id="1_a07vg"]
 [ext_resource type="Texture2D" uid="uid://kynirtw4oukc" path="res://World/tileset.png" id="2_bsjby"]
 [ext_resource type="PackedScene" uid="uid://mnn4x6mkgq8h" path="res://parallax_background.tscn" id="3_2vuwm"]
 [ext_resource type="PackedScene" uid="uid://4or427ea7kcs" path="res://Player/Player1.tscn" id="3_wm0qy"]
@@ -1419,6 +1420,7 @@ sources/0 = SubResource("TileSetAtlasSource_trkte")
 size = Vector2(8, 10)
 
 [node name="The_Fight" type="Node2D"]
+script = ExtResource("1_a07vg")
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(0, 40)
@@ -1440,3 +1442,8 @@ position = Vector2(576, 520)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(4, 5)
 shape = SubResource("RectangleShape2D_noawu")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

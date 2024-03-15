@@ -67,10 +67,10 @@ func _physics_process(delta):
 func take_damage(damage):
 	health -= damage
 	if health <= 0 and able:
+		var parent = get_parent()
+		if parent and parent.has_method("start_respawn_cooldown"):
+			parent.start_respawn_cooldown(1)
 		self.process_mode = 4
 		self.hide()
 		stock -= 1
-		var cooldown_spawner = Timer.new()
-		cooldown_spawner.autostart = true
-		cooldown_spawner.wait_time = 1
-	#	cooldown_spawner.connect("timeout", self, "spawn_player")
+		
