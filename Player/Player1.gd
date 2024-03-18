@@ -1,39 +1,54 @@
 extends CharacterBody2D
 
+const MAP_X = 1152
+const MAP_Y = 648
 
 var not_dead = true
 var tumbling = false
-var stuck_lying_on_ground = false
+const TUMBLING_TIME = 2
+var stuck = false
+const STUCK_FROM_MISSED_TEKK_TIME = 1
 var tekk = false
 
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
+const WALK_SPEED = 150.0
+const RUN_SPEED = 300.0
+var SPEED = WALK_SPEED
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
+var jump_count = 2
+const JUMP_VELOCITY = -400.0
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-@onready var animation = get_node("AnimationPlayer")
-
-var map_x = 1152
-var map_y = 648
+var attacks = [
+	["Grounded-neutral-attack", "Grounded-up-attack", "Grounded-down-attack", "Grounded-left-attack", "Grounded-right-attack", "Grounded-up-left-attack", "Grounded-down-left-attack", "Grounded-up-right-attack", "Grounded-down-right-attack"],
+	["Airborne-neutral-attack", "Airborne-up-attack", "Airborne-down-attack", "Airborne-left-attack", "Airborne-right-attack", "Airborne-up-left-attack", "Airborne-down-left-attack", "Airborne-up-right-attack", "Airborne-down-right-attack"]
+	]
+var attacks_first_index = 0
 
 var stock = 3
 var health = 10
 
+@onready var animation = get_node("AnimationPlayer")
+
 func _ready():
 	animation.play("Idle")
-	
 
 func _physics_process(delta):
-	# Add the gravity.
 	
-	if not stuck_lying_on_ground:
+	
+	if not stuck:
 		if not is_on_floor():
 			velocity.y += gravity * delta
-
+		
+		if is_on_floor():
+			jump_count = 2
+			attacks_first_index = 0
+		else:
+			attacks_first_index = 1
+		
 		# Handle jump.
-		if Input.is_action_just_pressed("ui_accept") and is_on_floor() and animation.current_animation != "Attack":
+		if Input.is_action_just_pressed("ui_accept") and jump_count > 0 and animation.current_animation != "Attack":
 			velocity.y = JUMP_VELOCITY
+			jump_count -= 1
 		
 		var direction_up_down = Input.get_axis("ui_down","ui_up")
 		
@@ -46,10 +61,11 @@ func _physics_process(delta):
 		# As good practice, you should replace UI actions with custom gameplay actions
 		var direction_left_right = Input.get_axis("ui_left", "ui_right")
 		
-		if direction_left_right == -1 and animation.current_animation != "Attack":
-			get_node("AnimatedSprite2D").flip_h = true
-		elif direction_left_right == 1 and animation.current_animation != "Attack":
-			get_node("AnimatedSprite2D").flip_h = false
+		if animation.current_animation != "Attack" and is_on_floor():
+			if direction_left_right == -1:
+				get_node("AnimatedSprite2D").flip_h = true
+			elif direction_left_right == 1:
+				get_node("AnimatedSprite2D").flip_h = false
 		
 		if direction_left_right and animation.current_animation != "Attack":
 			velocity.x = direction_left_right * SPEED
@@ -64,18 +80,16 @@ func _physics_process(delta):
 			animation.play("Jump")
 		
 		move_and_slide()
-		
-		if Input.is_action_just_pressed("Player1_attack") and is_on_floor():
-			animation.play("Attack")
-			velocity.x = 0
-	
-	#take_damage(1)
-	
-	if tumbling and is_on_floor() and not tekk:
-		stuck_lying_on_ground = true
-		$Stuck_lying_on_ground_Timer.start(1)
+		if attack():
+			print(attack())
+			animation.play(attack())
+			
+		if tumbling and is_on_floor() and not tekk:
+			stuck = true
+			#animation.play("Lying_down")
+			$Timer_stuck.start(STUCK_FROM_MISSED_TEKK_TIME)
 
-	if self.position.x < 0 or self.position.x > map_x:
+	if self.position.x < 0 or self.position.x > MAP_X or self.position.y > MAP_Y or self.position.y < 0:
 		print("Out of bounds")
 		var parent = get_parent()
 		if parent and parent.has_method("start_respawn_cooldown"):
@@ -86,17 +100,7 @@ func _physics_process(delta):
 			not_dead = false
 			velocity.x = 0
 			velocity.y = 0
-	elif self.position.y > map_y or self.position.y < 0:
-		var parent = get_parent()
-		if parent and parent.has_method("start_respawn_cooldown"):
-			parent.start_respawn_cooldown(1)
-			self.process_mode = Node.PROCESS_MODE_DISABLED
-			self.hide()
-			stock -= 1
-			not_dead = false
-			velocity.x = 0
-			velocity.y = 0
-
+	
 func take_damage(damage):
 	if not_dead:
 		health -= damage
@@ -109,9 +113,33 @@ func take_damage(damage):
 				stock -= 1
 				not_dead = false
 
-func _on_timer_timeout():
-	stuck_lying_on_ground = false;
 
 
-func _on_tumbling_timer_timeout():
-	tumbling = false;
+func _on_timer_tumble_timeout():
+	tumbling = false
+
+func _on_timer_stuck_timeout():
+	stuck = false
+
+func attack():
+	if Input.is_action_just_pressed("Player1_neutral-attack"):
+		print("ABC")
+		return attacks[attacks_first_index][0]
+	elif Input.is_action_just_pressed("Player1_up-attack") and Input.is_action_just_pressed("Player1_left-attack"):
+		return attacks[attacks_first_index][5]
+	elif Input.is_action_just_pressed("Player1_down-attack") and Input.is_action_just_pressed("Player1_left-attack"):
+		return attacks[attacks_first_index][6]
+	elif Input.is_action_just_pressed("Player1_up-attack") and Input.is_action_just_pressed("Player1_right-attack"):
+		return attacks[attacks_first_index][7]
+	elif Input.is_action_just_pressed("Player1_down-attack") and Input.is_action_just_pressed("Player1_right-attack"):
+		return attacks[attacks_first_index][8]
+	elif Input.is_action_just_pressed("Player1_up-attack"):
+		return attacks[attacks_first_index][1]
+	elif Input.is_action_just_pressed("Player1_down-attack"):
+		return attacks[attacks_first_index][2]
+	elif Input.is_action_just_pressed("Player1_left-attack"):
+		return attacks[attacks_first_index][3]
+	elif Input.is_action_just_pressed("Player1_right-attack"):
+		return attacks[attacks_first_index][4]
+	else:
+		pass
