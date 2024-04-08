@@ -46,11 +46,11 @@ func _physics_process(delta):
 			attacks_first_index = 1
 		
 		# Handle jump.
-		if Input.is_action_just_pressed("ui_accept") and jump_count > 0 and animation.current_animation != "Attack":
+		if Input.is_action_just_pressed("ui_accept") and jump_count > 0 and animation.current_animation not in attacks:
 			velocity.y = JUMP_VELOCITY
 			jump_count -= 1
 		
-		var direction_up_down = Input.get_axis("ui_down","ui_up")
+		var direction_up_down = Input.get_axis("Player1_crouch","Player1_look_up")
 		
 		if direction_up_down == -1:
 			animation.play("down")
@@ -59,24 +59,27 @@ func _physics_process(delta):
 		
 		# Get the input direction and handle the movement/deceleration.
 		# As good practice, you should replace UI actions with custom gameplay actions
-		var direction_left_right = Input.get_axis("ui_left", "ui_right")
+		var direction_left_right = Input.get_axis("Player1_go_left", "Player1_go_right")
 		
-		if animation.current_animation != "Attack" and is_on_floor():
+		if animation.current_animation not in attacks and is_on_floor():
 			if direction_left_right == -1:
 				get_node("AnimatedSprite2D").flip_h = true
 			elif direction_left_right == 1:
 				get_node("AnimatedSprite2D").flip_h = false
 		
-		if direction_left_right and animation.current_animation != "Attack":
-			velocity.x = direction_left_right * SPEED
+		if direction_left_right and animation.current_animation not in attacks:
+			if Input.is_action_pressed("Player1_run"):
+				velocity.x = direction_left_right * RUN_SPEED
+			else:
+				velocity.x = direction_left_right * WALK_SPEED
 			if velocity.y == 0 and is_on_floor():
 				animation.play("Run")
-		elif animation.current_animation != "Attack":
+		elif animation.current_animation not in attacks:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
-			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation != "Attack":
+			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation not in attacks:
 				animation.play("Idle")
 		
-		if not is_on_floor():
+		if not is_on_floor() and animation.current_animation not in attacks:
 			animation.play("Jump")
 		
 		move_and_slide()
