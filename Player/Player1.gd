@@ -46,7 +46,7 @@ func _physics_process(delta):
 			attacks_first_index = 1
 		
 		# Handle jump.
-		if Input.is_action_just_pressed("ui_accept") and jump_count > 0 and animation.current_animation not in attacks:
+		if Input.is_action_just_pressed("ui_accept") and jump_count > 0 and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 			velocity.y = JUMP_VELOCITY
 			jump_count -= 1
 		
@@ -61,25 +61,25 @@ func _physics_process(delta):
 		# As good practice, you should replace UI actions with custom gameplay actions
 		var direction_left_right = Input.get_axis("Player1_go_left", "Player1_go_right")
 		
-		if animation.current_animation not in attacks and is_on_floor():
+		if animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1] and is_on_floor():
 			if direction_left_right == -1:
 				get_node("AnimatedSprite2D").flip_h = true
 			elif direction_left_right == 1:
 				get_node("AnimatedSprite2D").flip_h = false
 		
-		if direction_left_right and animation.current_animation not in attacks:
+		if direction_left_right and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 			if Input.is_action_pressed("Player1_run"):
 				velocity.x = direction_left_right * RUN_SPEED
 			else:
 				velocity.x = direction_left_right * WALK_SPEED
 			if velocity.y == 0 and is_on_floor():
 				animation.play("Run")
-		elif animation.current_animation not in attacks:
+		elif animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
-			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation not in attacks:
+			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 				animation.play("Idle")
 		
-		if not is_on_floor() and animation.current_animation not in attacks:
+		if not is_on_floor() and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 			animation.play("Jump")
 		
 		move_and_slide()
@@ -126,7 +126,6 @@ func _on_timer_stuck_timeout():
 
 func attack():
 	if Input.is_action_just_pressed("Player1_neutral-attack"):
-		print("ABC")
 		return attacks[attacks_first_index][0]
 	elif Input.is_action_just_pressed("Player1_up-attack") and Input.is_action_just_pressed("Player1_left-attack"):
 		return attacks[attacks_first_index][5]
