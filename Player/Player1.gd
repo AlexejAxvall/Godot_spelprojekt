@@ -9,6 +9,7 @@ const TUMBLING_TIME = 2
 var stuck = false
 const STUCK_FROM_MISSED_TEKK_TIME = 1
 var tekk = false
+var dodging = false
 
 const WALK_SPEED = 150.0
 const RUN_SPEED = 300.0
@@ -16,10 +17,12 @@ var SPEED = WALK_SPEED
 
 var jump_count = 2
 const JUMP_VELOCITY = -400.0
+var hanging = false
+
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 var attacks = [
-	["Grounded-neutral-attack", "Grounded-up-attack", "Grounded-down-attack", "Grounded-left-attack", "Grounded-right-attack", "Grounded-up-left-attack", "Grounded-down-left-attack", "Grounded-up-right-attack", "Grounded-down-right-attack"],
+	["Grounded-neutral-attack", "Grounded-up-attack", "Grounded-down-attack", "Grounded-left-attack", "Grounded-right-attack", "Grounded-up-left-attack", "Grounded-down-left-attack", "Grounded-up-right-attack", "Grounded-down-right-attack", "Grounded-running-up-attack", "Grounded-running-down-attack", "Grounded-running-left-attack", "Grounded-running-right-attack"],
 	["Airborne-neutral-attack", "Airborne-up-attack", "Airborne-down-attack", "Airborne-left-attack", "Airborne-right-attack", "Airborne-up-left-attack", "Airborne-down-left-attack", "Airborne-up-right-attack", "Airborne-down-right-attack"]
 	]
 var attacks_first_index = 0
@@ -82,6 +85,11 @@ func _physics_process(delta):
 		if not is_on_floor() and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 			animation.play("Jump")
 		
+		#if hanging:
+			#velocity.x = 0
+			#velocity.y = 0
+			#animation.play("hanging")
+		
 		move_and_slide()
 		if attack():
 			print(attack())
@@ -126,7 +134,11 @@ func _on_timer_stuck_timeout():
 
 func attack():
 	if Input.is_action_just_pressed("Player1_neutral-attack"):
-		return attacks[attacks_first_index][0]
+		if attacks_first_index == 0:
+			velocity.x = 0
+			return attacks[attacks_first_index][0]
+		else:
+			return attacks[attacks_first_index][0]
 	elif Input.is_action_just_pressed("Player1_up-attack") and Input.is_action_just_pressed("Player1_left-attack"):
 		return attacks[attacks_first_index][5]
 	elif Input.is_action_just_pressed("Player1_down-attack") and Input.is_action_just_pressed("Player1_left-attack"):
