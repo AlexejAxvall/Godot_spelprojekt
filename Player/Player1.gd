@@ -16,7 +16,7 @@ const RUN_SPEED = 300.0
 var SPEED = WALK_SPEED
 
 var jump_count = 1
-const JUMP_VELOCITY = -400.0
+var jump_velocity = -300.0
 var hanging = false
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -45,13 +45,21 @@ func _physics_process(delta):
 			attacks_first_index = 0
 		else:
 			attacks_first_index = 1
+				
+		if Input.is_action_pressed("Player1_jump") and is_on_floor():
+			print(jump_velocity)
+			jump_velocity = clamp(jump_velocity - 50, -500, -300)
+			print(jump_velocity)
 		
-		if Input.is_action_just_pressed("Player1_jump") and is_on_floor():
-			jump_count += 1
-		# Handle jump.
-		if Input.is_action_just_pressed("Player1_jump") and jump_count > 0 and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
-			velocity.y = JUMP_VELOCITY
+		if Input.is_action_just_pressed("Player1_jump") and not is_on_floor() and jump_count > 0:
+			velocity.y = -400
 			jump_count -= 1
+				
+		if Input.is_action_just_released("Player1_jump") or jump_velocity == -500:
+			if is_on_floor() and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
+				velocity.y = jump_velocity
+				print("Jump reset")
+				jump_velocity = -300
 		
 		var direction_up_down = Input.get_axis("Player1_crouch","Player1_look_up")
 		
@@ -72,15 +80,22 @@ func _physics_process(delta):
 		
 		if direction_left_right and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 			if Input.is_action_pressed("Player1_run"):
-				velocity.x = direction_left_right * RUN_SPEED
-				velocity.x = move_toward(velocity.x, 0, SPEED)
+				if is_on_floor():
+					velocity.x = move_toward(velocity.x, direction_left_right * RUN_SPEED, 50)
+				else:
+					velocity.x = move_toward(velocity.x, direction_left_right * RUN_SPEED, 20)
 			else:
-				velocity.x = direction_left_right * WALK_SPEED
+				if is_on_floor():
+					velocity.x = move_toward(velocity.x, direction_left_right * WALK_SPEED, 50)
+				else:
+					velocity.x = move_toward(velocity.x, direction_left_right * WALK_SPEED, 20)
 			if velocity.y == 0 and is_on_floor():
 				animation.play("Run")
 		elif animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 			if is_on_floor():
-				velocity.x = move_toward(velocity.x, 0, SPEED)
+				velocity.x = move_toward(velocity.x, 0, 30)
+			elif not is_on_floor():
+				velocity.x = move_toward(velocity.x, 0, 5)
 			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 				animation.play("Idle")
 		
