@@ -1,5 +1,7 @@
 extends Node2D
 
+var distance2 = 0
+
 @onready var player = get_node("Player1");
 
 # Called when the node enters the scene tree for the first time.
@@ -29,3 +31,9 @@ func respawn_player():
 	player.position.y = 300
 	player.show()
 	player.not_dead = true;
+
+func start_zoom_timer():
+	$Timer_zoom.start(0)
+
+func _on_timer_zoom_timeout():
+	$Camera2D.update_zoom()

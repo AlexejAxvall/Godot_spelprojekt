@@ -1434,7 +1434,7 @@ layer_0/tile_data = PackedInt32Array(1966080, 786432, 4, 2031616, 786432, 5, 209
 visible = false
 
 [node name="Player1" parent="." groups=["players"] instance=ExtResource("3_wm0qy")]
-position = Vector2(449, 449)
+position = Vector2(448, 448)
 
 [node name="Player2" parent="." groups=["players"] instance=ExtResource("4_ew37f")]
 position = Vector2(659, 462)
@@ -1455,8 +1455,4 @@ position = Vector2(376, 480)
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("7_6mrrv")
 
-[node name="Timer_zoom" type="Timer" parent="."]
-one_shot = true
-
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
-[connection signal="timeout" from="Timer_zoom" to="." method="_on_timer_zoom_timeout"]

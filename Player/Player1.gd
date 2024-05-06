@@ -15,7 +15,7 @@ const WALK_SPEED = 150.0
 const RUN_SPEED = 300.0
 var SPEED = WALK_SPEED
 
-var jump_count = 2
+var jump_count = 1
 const JUMP_VELOCITY = -400.0
 var hanging = false
 
@@ -36,20 +36,20 @@ func _ready():
 	animation.play("Idle")
 
 func _physics_process(delta):
-	
-	
 	if not stuck:
 		if not is_on_floor():
 			velocity.y += gravity * delta
 		
 		if is_on_floor():
-			jump_count = 2
+			jump_count = 1
 			attacks_first_index = 0
 		else:
 			attacks_first_index = 1
 		
+		if Input.is_action_just_pressed("Player1_jump") and is_on_floor():
+			jump_count += 1
 		# Handle jump.
-		if Input.is_action_just_pressed("ui_accept") and jump_count > 0 and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
+		if Input.is_action_just_pressed("Player1_jump") and jump_count > 0 and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 			velocity.y = JUMP_VELOCITY
 			jump_count -= 1
 		
@@ -73,12 +73,14 @@ func _physics_process(delta):
 		if direction_left_right and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 			if Input.is_action_pressed("Player1_run"):
 				velocity.x = direction_left_right * RUN_SPEED
+				velocity.x = move_toward(velocity.x, 0, SPEED)
 			else:
 				velocity.x = direction_left_right * WALK_SPEED
 			if velocity.y == 0 and is_on_floor():
 				animation.play("Run")
 		elif animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
-			velocity.x = move_toward(velocity.x, 0, SPEED)
+			if is_on_floor():
+				velocity.x = move_toward(velocity.x, 0, SPEED)
 			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
 				animation.play("Idle")
 		
@@ -89,6 +91,7 @@ func _physics_process(delta):
 			#velocity.x = 0
 			#velocity.y = 0
 			#animation.play("hanging")
+		
 		
 		move_and_slide()
 		if attack():
@@ -124,16 +127,21 @@ func take_damage(damage):
 				stock -= 1
 				not_dead = false
 
+func knockback_player(force: float, angle: float):
+	var knockback_direction = Vector2(cos(angle), sin(angle))
+	var knockback_magnitude = force
+	var knockback = knockback_direction * knockback_magnitude
+	velocity.x += knockback.x / 8
+	velocity.y += knockback.y
 
-
-func _on_timer_tumble_timeout():
-	tumbling = false
-
-func _on_timer_stuck_timeout():
-	stuck = false
+func simulate_attack_on():
+	var attack_force = 500.0
+	var attack_angle = deg_to_rad(180)  # Assume 45 degrees, convert to radians
+	knockback_player(attack_force, attack_angle)
 
 func attack():
 	if Input.is_action_just_pressed("Player1_neutral-attack"):
+		simulate_attack_on()
 		if attacks_first_index == 0:
 			velocity.x = 0
 			return attacks[attacks_first_index][0]
@@ -157,3 +165,11 @@ func attack():
 		return attacks[attacks_first_index][4]
 	else:
 		pass
+
+func _on_timer_timeout():
+	pass # Replace with function body.
+
+
+func _on_area_2d_body_entered(body):
+	if body.name == "Player2":
+		print("bababababa")
