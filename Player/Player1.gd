@@ -21,14 +21,45 @@ var hanging = false
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-var attacks = [
-	["Grounded-neutral-attack", "Grounded-up-attack", "Grounded-down-attack", "Grounded-left-attack", "Grounded-right-attack", "Grounded-up-left-attack", "Grounded-down-left-attack", "Grounded-up-right-attack", "Grounded-down-right-attack", "Grounded-running-up-attack", "Grounded-running-down-attack", "Grounded-running-left-attack", "Grounded-running-right-attack"],
-	["Airborne-neutral-attack", "Airborne-up-attack", "Airborne-down-attack", "Airborne-left-attack", "Airborne-right-attack", "Airborne-up-left-attack", "Airborne-down-left-attack", "Airborne-up-right-attack", "Airborne-down-right-attack"]
-	]
-var attacks_first_index = 0
+var attacks = {
+	"Grounded_attacks" : {
+		"Grounded-up-attack" : 0,
+		"Grounded-down-attack" : 45,
+		"Grounded-left-attack" : 45,
+		"Grounded-right-attack" : 45,
+		"Grounded-up-left-attack" : 22.5,
+		"Grounded-down-left-attack" : 67.5,
+		"Grounded-up-right-attack" : 22.5,
+		"Grounded-down-right-attack" : 22.5,
+		"Grounded-running-up-attack" : 0,
+		"Grounded-running-down-attack" : 0,
+		"Grounded-running-left-attack" : 0,
+		"Grounded-running-right-attack" : 0
+	}
+	,
+	
+	"Airborne_attacks" : {
+		"Airborne-neutral-attack" : 67.5,
+		"Airborne-up-attack" : 22.5,
+		"Airborne-down-attack" : 90,
+		"Airborne-left-attack" : 45,
+		"Airborne-right-attack" : 45,
+		"Airborne-up-left-attack" : 0,
+		"Airborne-down-left-attack" : 0,
+		"Airborne-up-right-attack" : 0,
+		"Airborne-down-right-attack" : 0
+	}
+}
+	
+var grounded_or_airborne = 0
 
 var stock = 3
 var health = 10
+
+var attacks_keys = attacks.keys()
+var grounded_attack_keys = attacks["Grounded_attacks"].keys()
+var airborne_attack_keys = attacks["Airborne_attacks"].keys()
+var sub_keys = attacks_keys
 
 @onready var animation = get_node("AnimationPlayer")
 
@@ -36,15 +67,19 @@ func _ready():
 	animation.play("Idle")
 
 func _physics_process(delta):
+	if animation.current_animation in attacks["Grounded_attacks"]:
+		print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
 	if not stuck:
+		
 		if not is_on_floor():
 			velocity.y += gravity * delta
 		
 		if is_on_floor():
 			jump_count = 1
-			attacks_first_index = 0
+			grounded_or_airborne = "Grounded_attacks"
 		else:
-			attacks_first_index = 1
+			grounded_or_airborne = "Airborne_attacks"
 				
 		if Input.is_action_pressed("Player1_jump") and is_on_floor():
 			print(jump_velocity)
@@ -56,29 +91,31 @@ func _physics_process(delta):
 			jump_count -= 1
 				
 		if Input.is_action_just_released("Player1_jump") or jump_velocity == -500:
-			if is_on_floor() and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
+			if is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
 				velocity.y = jump_velocity
 				print("Jump reset")
 				jump_velocity = -300
 		
 		var direction_up_down = Input.get_axis("Player1_crouch","Player1_look_up")
 		
-		if direction_up_down == -1:
-			animation.play("down")
-		elif direction_up_down == 1:
-			animation.play("up")
+		if direction_up_down == -1 and animation.current_animation not in attacks["Grounded_attacks"]:
+			pass
+			#animation.play("down")
+		elif direction_up_down == 1 and animation.current_animation not in attacks["Grounded_attacks"]:
+			pass
+			#animation.play("up")
 		
 		# Get the input direction and handle the movement/deceleration.
 		# As good practice, you should replace UI actions with custom gameplay actions
 		var direction_left_right = Input.get_axis("Player1_go_left", "Player1_go_right")
 		
-		if animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1] and is_on_floor():
+		if animation.current_animation not in attacks["Grounded_attacks"] and is_on_floor():
 			if direction_left_right == -1:
 				get_node("AnimatedSprite2D").flip_h = true
 			elif direction_left_right == 1:
 				get_node("AnimatedSprite2D").flip_h = false
 		
-		if direction_left_right and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
+		if direction_left_right and animation.current_animation not in attacks["Grounded_attacks"]:
 			if Input.is_action_pressed("Player1_run"):
 				if is_on_floor():
 					velocity.x = move_toward(velocity.x, direction_left_right * RUN_SPEED, 50)
@@ -89,17 +126,18 @@ func _physics_process(delta):
 					velocity.x = move_toward(velocity.x, direction_left_right * WALK_SPEED, 50)
 				else:
 					velocity.x = move_toward(velocity.x, direction_left_right * WALK_SPEED, 20)
-			if velocity.y == 0 and is_on_floor():
-				animation.play("Run")
-		elif animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
+			if velocity.y == 0 and is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
+				pass
+				#animation.play("Run")
+		elif animation.current_animation not in attacks:
 			if is_on_floor():
 				velocity.x = move_toward(velocity.x, 0, 30)
 			elif not is_on_floor():
 				velocity.x = move_toward(velocity.x, 0, 5)
-			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
+			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
 				animation.play("Idle")
 		
-		if not is_on_floor() and animation.current_animation not in attacks[0] and animation.current_animation not in attacks[1]:
+		if not is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
 			animation.play("Jump")
 		
 		#if hanging:
@@ -142,6 +180,11 @@ func take_damage(damage):
 				stock -= 1
 				not_dead = false
 
+func simulate_attack_on():
+	var attack_force = 500.0
+	var attack_angle = deg_to_rad(180)
+	knockback_player(attack_force, attack_angle)
+
 func knockback_player(force: float, angle: float):
 	var knockback_direction = Vector2(cos(angle), sin(angle))
 	var knockback_magnitude = force
@@ -149,35 +192,28 @@ func knockback_player(force: float, angle: float):
 	velocity.x += knockback.x / 8
 	velocity.y += knockback.y
 
-func simulate_attack_on():
-	var attack_force = 500.0
-	var attack_angle = deg_to_rad(180)  # Assume 45 degrees, convert to radians
-	knockback_player(attack_force, attack_angle)
-
 func attack():
+	sub_keys = grounded_attack_keys if is_on_floor() else airborne_attack_keys
 	if Input.is_action_just_pressed("Player1_neutral-attack"):
 		simulate_attack_on()
-		if attacks_first_index == 0:
-			velocity.x = 0
-			return attacks[attacks_first_index][0]
-		else:
-			return attacks[attacks_first_index][0]
+		return "Grounded-neutral-attack" if is_on_floor() else "Airborne-neutral-attack"
+		
 	elif Input.is_action_just_pressed("Player1_up-attack") and Input.is_action_just_pressed("Player1_left-attack"):
-		return attacks[attacks_first_index][5]
+		return "Grounded-up-left-attack" if is_on_floor() else "Airborne-up-left-attack"
 	elif Input.is_action_just_pressed("Player1_down-attack") and Input.is_action_just_pressed("Player1_left-attack"):
-		return attacks[attacks_first_index][6]
+		return "Grounded-down-left-attack" if is_on_floor() else "Airborne-down-left-attack"
 	elif Input.is_action_just_pressed("Player1_up-attack") and Input.is_action_just_pressed("Player1_right-attack"):
-		return attacks[attacks_first_index][7]
+		return "Grounded-up-right-attack" if is_on_floor() else "Airborne-up-right-attack"
 	elif Input.is_action_just_pressed("Player1_down-attack") and Input.is_action_just_pressed("Player1_right-attack"):
-		return attacks[attacks_first_index][8]
+		return "Grounded-down-right-attack" if is_on_floor() else "Airborne-down-right-attack"
 	elif Input.is_action_just_pressed("Player1_up-attack"):
-		return attacks[attacks_first_index][1]
+		return "Grounded-up-attack" if is_on_floor() else "Airborne-up-attack"
 	elif Input.is_action_just_pressed("Player1_down-attack"):
-		return attacks[attacks_first_index][2]
+		return "Grounded-down-attack" if is_on_floor() else "Airborne-down-attack"
 	elif Input.is_action_just_pressed("Player1_left-attack"):
-		return attacks[attacks_first_index][3]
+		return "Grounded-left-attack" if is_on_floor() else "Airborne-left-attack"
 	elif Input.is_action_just_pressed("Player1_right-attack"):
-		return attacks[attacks_first_index][4]
+		return "Grounded-right-attack" if is_on_floor() else "Airborne-right-attack"
 	else:
 		pass
 

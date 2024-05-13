@@ -342,7 +342,7 @@ shape = SubResource("RectangleShape2D_c2dd2")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -33)
 sprite_frames = SubResource("SpriteFrames_0cir5")
-animation = &"Run"
+animation = &"Attack"
 frame = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -360,11 +360,11 @@ position = Vector2(-2.5, -7)
 shape = SubResource("RectangleShape2D_ojot5")
 script = ExtResource("6_2huxc")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D(attack_box)" type="Area2D" parent="."]
 
-[node name="CollisionShape2D-attack" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D-attack" type="CollisionShape2D" parent="Area2D(attack_box)"]
 shape = SubResource("CapsuleShape2D_yl2ry")
 script = ExtResource("6_tebia")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="Area2D(attack_box)" to="." method="_on_area_2d_body_entered"]
