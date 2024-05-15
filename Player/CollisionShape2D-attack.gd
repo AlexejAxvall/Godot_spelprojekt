@@ -3,6 +3,11 @@ extends CollisionShape2D
 var is_attack_active = false
 var last_frame_processed = -1
 
+var Player1_node = get_parent().get_parent().get_parent()
+
+func get_attack_info(_angle, _power, _damage):
+	var attack_info = [_angle, _power, _damage]	
+
 func show_hitbox():
 	disabled = false
 

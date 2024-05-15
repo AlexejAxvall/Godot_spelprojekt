@@ -23,31 +23,32 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 var attacks = {
 	"Grounded_attacks" : {
-		"Grounded-up-attack" : 0,
-		"Grounded-down-attack" : 45,
-		"Grounded-left-attack" : 45,
-		"Grounded-right-attack" : 45,
-		"Grounded-up-left-attack" : 22.5,
-		"Grounded-down-left-attack" : 67.5,
-		"Grounded-up-right-attack" : 22.5,
-		"Grounded-down-right-attack" : 22.5,
-		"Grounded-running-up-attack" : 0,
-		"Grounded-running-down-attack" : 0,
-		"Grounded-running-left-attack" : 0,
-		"Grounded-running-right-attack" : 0
+		"Grounded-neutral-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-up-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-down-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
+		"Grounded-left-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
+		"Grounded-right-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
+		"Grounded-up-left-attack" : {"angle" : 22.5, "force" : 100, "damage" : 10},
+		"Grounded-down-left-attack" : {"angle" : 67.5, "force" : 100, "damage" : 10},
+		"Grounded-up-right-attack" : {"angle" : 22.5, "force" : 100, "damage" : 10},
+		"Grounded-down-right-attack" : {"angle" : 22.5, "force" : 100, "damage" : 10},
+		"Grounded-running-up-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-running-down-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-running-left-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-running-right-attack" : {"angle" : 0, "force" : 100, "damage" : 10}
 	}
 	,
 	
 	"Airborne_attacks" : {
-		"Airborne-neutral-attack" : 67.5,
-		"Airborne-up-attack" : 22.5,
-		"Airborne-down-attack" : 90,
-		"Airborne-left-attack" : 45,
-		"Airborne-right-attack" : 45,
-		"Airborne-up-left-attack" : 0,
-		"Airborne-down-left-attack" : 0,
-		"Airborne-up-right-attack" : 0,
-		"Airborne-down-right-attack" : 0
+		"Airborne-neutral-attack" : {"angle" : 67.5, "force" : 10, "damage" : 10},
+		"Airborne-up-attack" : {"angle" : 22.5, "force" : 100, "damage" : 10},
+		"Airborne-down-attack" : {"angle" : 90, "force" : 100, "damage" : 10},
+		"Airborne-left-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
+		"Airborne-right-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
+		"Airborne-up-left-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
+		"Airborne-down-left-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
+		"Airborne-up-right-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
+		"Airborne-down-right-attack" : {"angle" : 0, "force" : 100, "damage" : 10}
 	}
 }
 	
@@ -67,11 +68,7 @@ func _ready():
 	animation.play("Idle")
 
 func _physics_process(delta):
-	if animation.current_animation in attacks["Grounded_attacks"]:
-		print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-
 	if not stuck:
-		
 		if not is_on_floor():
 			velocity.y += gravity * delta
 		
@@ -127,14 +124,15 @@ func _physics_process(delta):
 				else:
 					velocity.x = move_toward(velocity.x, direction_left_right * WALK_SPEED, 20)
 			if velocity.y == 0 and is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
-				pass
-				#animation.play("Run")
+				animation.play("Run")
+
 		elif animation.current_animation not in attacks:
 			if is_on_floor():
 				velocity.x = move_toward(velocity.x, 0, 30)
 			elif not is_on_floor():
 				velocity.x = move_toward(velocity.x, 0, 5)
 			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
+				print(animation.current_animation)
 				animation.play("Idle")
 		
 		if not is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
@@ -150,6 +148,7 @@ func _physics_process(delta):
 		if attack():
 			print(attack())
 			animation.play(attack())
+			
 			
 		if tumbling and is_on_floor() and not tekk:
 			stuck = true
@@ -197,7 +196,6 @@ func attack():
 	if Input.is_action_just_pressed("Player1_neutral-attack"):
 		simulate_attack_on()
 		return "Grounded-neutral-attack" if is_on_floor() else "Airborne-neutral-attack"
-		
 	elif Input.is_action_just_pressed("Player1_up-attack") and Input.is_action_just_pressed("Player1_left-attack"):
 		return "Grounded-up-left-attack" if is_on_floor() else "Airborne-up-left-attack"
 	elif Input.is_action_just_pressed("Player1_down-attack") and Input.is_action_just_pressed("Player1_left-attack"):
