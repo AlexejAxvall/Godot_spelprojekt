@@ -21,9 +21,11 @@ var hanging = false
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
+
+var flip = 0
 var attacks = {
 	"Grounded_attacks" : {
-		"Grounded-neutral-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-neutral-attack" : {"angle" : 90, "force" : 100, "damage" : 10},
 		"Grounded-up-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
 		"Grounded-down-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
 		"Grounded-left-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
@@ -68,6 +70,7 @@ func _ready():
 	animation.play("Idle")
 
 func _physics_process(delta):
+	print(animation.current_animation)
 	if not stuck:
 		if not is_on_floor():
 			velocity.y += gravity * delta
@@ -109,9 +112,10 @@ func _physics_process(delta):
 		if animation.current_animation not in attacks["Grounded_attacks"] and is_on_floor():
 			if direction_left_right == -1:
 				get_node("AnimatedSprite2D").flip_h = true
+				flip = -1
 			elif direction_left_right == 1:
 				get_node("AnimatedSprite2D").flip_h = false
-		
+				flip = 1
 		if direction_left_right and animation.current_animation not in attacks["Grounded_attacks"]:
 			if Input.is_action_pressed("Player1_run"):
 				if is_on_floor():
@@ -132,7 +136,6 @@ func _physics_process(delta):
 			elif not is_on_floor():
 				velocity.x = move_toward(velocity.x, 0, 5)
 			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
-				print(animation.current_animation)
 				animation.play("Idle")
 		
 		if not is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
@@ -148,6 +151,10 @@ func _physics_process(delta):
 		if attack():
 			print(attack())
 			animation.play(attack())
+			var attack_box = get_node("Area2D(attack_box)").get_node("CollisionShape2D-attack")
+			grounded_or_airborne = "Grounded_attacks" if is_on_floor() else "Airborne_attacks"
+			attack_box.get_attack_info(attacks[grounded_or_airborne][attack()]["angle"]*flip)
+			print(attacks[grounded_or_airborne][attack()]["angle"])
 			
 			
 		if tumbling and is_on_floor() and not tekk:

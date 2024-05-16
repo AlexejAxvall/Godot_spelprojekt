@@ -2,11 +2,10 @@ extends CollisionShape2D
 
 var is_attack_active = false
 var last_frame_processed = -1
+var angle
 
-var Player1_node = get_parent().get_parent().get_parent()
-
-func get_attack_info(_angle, _power, _damage):
-	var attack_info = [_angle, _power, _damage]	
+func get_attack_info(_angle):
+	angle = _angle
 
 func show_hitbox():
 	disabled = false
@@ -37,27 +36,35 @@ func handle_frame_logic(frame):
 	if frame == 1 and not is_attack_active:
 		is_attack_active = true
 		show_hitbox()
-		stretch_hitbox(frame)
-		rotate_parent(30)
+		change_hitbox(frame)
+		rotate_parent(angle)
 	elif frame == 10 and is_attack_active:
+		self.position = Vector2(0, 0)
 		shape.height = 10
-		shape.radius = 10
+		shape.radius = 5
 		is_attack_active = false
 		hide_hitbox()
-		rotate_parent(0)
+		rotate_parent(angle)
 	elif is_attack_active:
-		stretch_hitbox(frame)
+		change_hitbox(frame)
 
-func stretch_hitbox(frame):
+func change_hitbox(frame):
 	if shape is CapsuleShape2D:
-		var new_height = 50 + (frame - 1) * 5
-		var new_radius = 5 + (frame - 1) * 0.5
+		var initial_height = 50
+		var initial_radius = 5
+		var new_height = initial_height + (frame - 1) * 5
+		#var new_radius = initial_radius + (frame - 1) * 0.5
+
+		var height_change = new_height - shape.height
+		var new_position_offset = Vector2(0, height_change / 2)
+
+		self.position -= new_position_offset
 		shape.height = new_height
-		shape.radius = new_radius
+		#shape.radius = new_radius
 	else:
 		pass
 
-func rotate_parent(degrees):
+func rotate_parent(_angle):
 	var node2d_parent = get_parent()
 	if node2d_parent and node2d_parent is Node2D:
-		node2d_parent.rotation_degrees = degrees
+		node2d_parent.rotation_degrees = _angle
