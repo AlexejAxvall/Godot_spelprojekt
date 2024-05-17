@@ -21,8 +21,7 @@ var hanging = false
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-
-var flip = 0
+var flip = 1
 var attacks = {
 	"Grounded_attacks" : {
 		"Grounded-neutral-attack" : {"angle" : 90, "force" : 100, "damage" : 10},
@@ -53,7 +52,7 @@ var attacks = {
 		"Airborne-down-right-attack" : {"angle" : 0, "force" : 100, "damage" : 10}
 	}
 }
-	
+
 var grounded_or_airborne = 0
 
 var stock = 3
@@ -70,11 +69,11 @@ func _ready():
 	animation.play("Idle")
 
 func _physics_process(delta):
-	print(animation.current_animation)
+	var last_animation = animation.current_animation
 	if not stuck:
 		if not is_on_floor():
 			velocity.y += gravity * delta
-		
+
 		if is_on_floor():
 			jump_count = 1
 			grounded_or_airborne = "Grounded_attacks"
@@ -82,9 +81,7 @@ func _physics_process(delta):
 			grounded_or_airborne = "Airborne_attacks"
 				
 		if Input.is_action_pressed("Player1_jump") and is_on_floor():
-			print(jump_velocity)
 			jump_velocity = clamp(jump_velocity - 50, -500, -300)
-			print(jump_velocity)
 		
 		if Input.is_action_just_pressed("Player1_jump") and not is_on_floor() and jump_count > 0:
 			velocity.y = -400
@@ -93,7 +90,7 @@ func _physics_process(delta):
 		if Input.is_action_just_released("Player1_jump") or jump_velocity == -500:
 			if is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
 				velocity.y = jump_velocity
-				print("Jump reset")
+				#print("Jump reset")
 				jump_velocity = -300
 		
 		var direction_up_down = Input.get_axis("Player1_crouch","Player1_look_up")
@@ -148,14 +145,13 @@ func _physics_process(delta):
 		
 		
 		move_and_slide()
-		if attack():
+		if attack() and animation.current_animation and animation.current_animation not in attacks["Grounded_attacks"] and animation.current_animation not in attacks["Airborne_attacks"]:
 			print(attack())
 			animation.play(attack())
 			var attack_box = get_node("Area2D(attack_box)").get_node("CollisionShape2D-attack")
 			grounded_or_airborne = "Grounded_attacks" if is_on_floor() else "Airborne_attacks"
 			attack_box.get_attack_info(attacks[grounded_or_airborne][attack()]["angle"]*flip)
 			print(attacks[grounded_or_airborne][attack()]["angle"])
-			
 			
 		if tumbling and is_on_floor() and not tekk:
 			stuck = true
@@ -173,6 +169,9 @@ func _physics_process(delta):
 			not_dead = false
 			velocity.x = 0
 			velocity.y = 0
+	
+	if animation.current_animation != last_animation:
+		print(animation.current_animation)
 	
 func take_damage(damage):
 	if not_dead:
@@ -222,10 +221,6 @@ func attack():
 	else:
 		pass
 
-func _on_timer_timeout():
-	pass # Replace with function body.
-
-
 func _on_area_2d_body_entered(body):
 	if body.name == "Player2":
-		print("bababababa")
+		print("Player2 hit")

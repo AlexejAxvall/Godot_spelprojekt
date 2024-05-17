@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://4or427ea7kcs"]
+[gd_scene load_steps=41 format=3 uid="uid://4or427ea7kcs"]
 
 [ext_resource type="Script" path="res://Player/Player1.gd" id="1_g1ljo"]
 [ext_resource type="Texture2D" uid="uid://0mebyg6cvb56" path="res://spritesheets Player/attack.png" id="2_hmmst"]
@@ -331,6 +331,11 @@ _data = {
 size = Vector2(15, 44)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yl2ry"]
+radius = 8.0
+height = 16.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0kh8s"]
+size = Vector2(20, 7)
 
 [node name="Player1" type="CharacterBody2D"]
 script = ExtResource("1_g1ljo")
@@ -342,7 +347,7 @@ shape = SubResource("RectangleShape2D_c2dd2")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -33)
 sprite_frames = SubResource("SpriteFrames_0cir5")
-animation = &"Jump"
+animation = &"Attack"
 frame = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -363,8 +368,15 @@ script = ExtResource("6_2huxc")
 [node name="Area2D(attack_box)" type="Area2D" parent="."]
 
 [node name="CollisionShape2D-attack" type="CollisionShape2D" parent="Area2D(attack_box)"]
+position = Vector2(0, -10)
 shape = SubResource("CapsuleShape2D_yl2ry")
 script = ExtResource("6_tebia")
+
+[node name="Ledge_grab-box" type="Area2D" parent="."]
+
+[node name="CollisionShape2D_ledge_grab" type="CollisionShape2D" parent="Ledge_grab-box"]
+position = Vector2(0, -25.5)
+shape = SubResource("RectangleShape2D_0kh8s")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="body_entered" from="Area2D(attack_box)" to="." method="_on_area_2d_body_entered"]
