@@ -1430,7 +1430,7 @@ layer_0/tile_data = PackedInt32Array(1966080, 786432, 4, 2031616, 786432, 5, 209
 [node name="ParallaxBackground" parent="." instance=ExtResource("3_2vuwm")]
 
 [node name="Player1" parent="." groups=["players"] instance=ExtResource("3_wm0qy")]
-position = Vector2(449, 449)
+position = Vector2(461, 589)
 
 [node name="Player2" parent="." groups=["players"] instance=ExtResource("4_ew37f")]
 position = Vector2(659, 462)

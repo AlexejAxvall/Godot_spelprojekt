@@ -24,32 +24,32 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var flip = 1
 var attacks = {
 	"Grounded_attacks" : {
-		"Grounded-neutral-attack" : {"angle" : 90, "force" : 100, "damage" : 10},
-		"Grounded-up-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
-		"Grounded-down-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
-		"Grounded-left-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
-		"Grounded-right-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
-		"Grounded-up-left-attack" : {"angle" : 22.5, "force" : 100, "damage" : 10},
-		"Grounded-down-left-attack" : {"angle" : 67.5, "force" : 100, "damage" : 10},
-		"Grounded-up-right-attack" : {"angle" : 22.5, "force" : 100, "damage" : 10},
-		"Grounded-down-right-attack" : {"angle" : 22.5, "force" : 100, "damage" : 10},
-		"Grounded-running-up-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
-		"Grounded-running-down-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
-		"Grounded-running-left-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
-		"Grounded-running-right-attack" : {"angle" : 0, "force" : 100, "damage" : 10}
+		"Grounded-neutral-attack" : {"frames" : 10, "position" : -10, "angle" : 90, "force" : 100, "damage" : 10},
+		"Grounded-up-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-down-attack" : {"frames" : 10, "position" : -10, "angle" : 45, "force" : 100, "damage" : 10},
+		"Grounded-left-attack" : {"frames" : 10, "position" : -10, "angle" : 45, "force" : 100, "damage" : 10},
+		"Grounded-right-attack" : {"frames" : 10, "position" : -10, "angle" : 45, "force" : 100, "damage" : 10},
+		"Grounded-up-left-attack" : {"frames" : 10, "position" : -10, "angle" : 22.5, "force" : 100, "damage" : 10},
+		"Grounded-down-left-attack" : {"frames" : 10, "position" : -10, "angle" : 67.5, "force" : 100, "damage" : 10},
+		"Grounded-up-right-attack" : {"frames" : 10, "position" : -10, "angle" : 22.5, "force" : 100, "damage" : 10},
+		"Grounded-down-right-attack" : {"frames" : 10, "position" : -10, "angle" : 22.5, "force" : 100, "damage" : 10},
+		"Grounded-running-up-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-running-down-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-running-left-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-running-right-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10}
 	}
 	,
 	
 	"Airborne_attacks" : {
-		"Airborne-neutral-attack" : {"angle" : 67.5, "force" : 10, "damage" : 10},
-		"Airborne-up-attack" : {"angle" : 22.5, "force" : 100, "damage" : 10},
-		"Airborne-down-attack" : {"angle" : 90, "force" : 100, "damage" : 10},
-		"Airborne-left-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
-		"Airborne-right-attack" : {"angle" : 45, "force" : 100, "damage" : 10},
-		"Airborne-up-left-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
-		"Airborne-down-left-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
-		"Airborne-up-right-attack" : {"angle" : 0, "force" : 100, "damage" : 10},
-		"Airborne-down-right-attack" : {"angle" : 0, "force" : 100, "damage" : 10}
+		"Airborne-neutral-attack" : {"frames" : 10, "position" : -10, "angle" : 67.5, "force" : 10, "damage" : 10},
+		"Airborne-up-attack" : {"frames" : 10, "position" : -10, "angle" : 22.5, "force" : 100, "damage" : 10},
+		"Airborne-down-attack" : {"frames" : 10, "position" : -10, "angle" : 90, "force" : 100, "damage" : 10},
+		"Airborne-left-attack" : {"frames" : 10, "position" : -10, "angle" : 45, "force" : 100, "damage" : 10},
+		"Airborne-right-attack" : {"frames" : 10, "position" : -10, "angle" : 45, "force" : 100, "damage" : 10},
+		"Airborne-up-left-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
+		"Airborne-down-left-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
+		"Airborne-up-right-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
+		"Airborne-down-right-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10}
 	}
 }
 
@@ -146,11 +146,10 @@ func _physics_process(delta):
 		
 		move_and_slide()
 		if attack() and animation.current_animation and animation.current_animation not in attacks["Grounded_attacks"] and animation.current_animation not in attacks["Airborne_attacks"]:
-			print(attack())
 			animation.play(attack())
 			var attack_box = get_node("Area2D(attack_box)").get_node("CollisionShape2D-attack")
 			grounded_or_airborne = "Grounded_attacks" if is_on_floor() else "Airborne_attacks"
-			attack_box.get_attack_info(attacks[grounded_or_airborne][attack()]["angle"]*flip)
+			attack_box.get_attack_info(attacks[grounded_or_airborne][attack()]["position"], flip, attacks[grounded_or_airborne][attack()]["angle"])
 			print(attacks[grounded_or_airborne][attack()]["angle"])
 			
 		if tumbling and is_on_floor() and not tekk:

@@ -44,16 +44,16 @@ func _process(delta):
 	for pos in player_positions:
 		distance = centroid.distance_to(pos)
 	#print("abs(d1 - d2) = " + str(abs(distance - distance2)))
-	if abs(distance - distance2) >= 10:
 		#print("hallo")
-		distance2 = distance
-		new_zoom = 200 / distance
-		buffer = 0.1 * new_zoom
-		if zoom_finished:
-			var parent = get_parent()
-			parent.start_zoom_timer()
-			zoom_finished = false
-	
+	distance2 = distance
+	new_zoom = 200 / distance
+	buffer = 0.1 * new_zoom
+	#if zoom_finished:
+	var parent = get_parent()
+	parent.start_zoom_timer()
+	#zoom_finished = false
+	update_zoom()
+
 func update_zoom():
 	#print("Hey")
 	zoom = Vector2(new_zoom, new_zoom).clamp(zoom_min, zoom_max)
