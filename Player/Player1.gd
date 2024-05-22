@@ -102,8 +102,10 @@ func _physics_process(delta):
 			pass
 			#animation.play("up")
 		
-		# Get the input direction and handle the movement/deceleration.
-		# As good practice, you should replace UI actions with custom gameplay actions
+		if Input.is_action_just_pressed("Player1_dodge") and animation.current_animation not in attacks["Grounded_attacks"] and animation.current_animation not in attacks["Airborne_attacks"]:
+			var Player1_hitbox = get_node("Area2D(hitbox)/Player1_hitbox")
+			#Player1_hitbox.
+		
 		var direction_left_right = Input.get_axis("Player1_go_left", "Player1_go_right")
 		
 		if animation.current_animation not in attacks["Grounded_attacks"] and is_on_floor():
@@ -223,3 +225,7 @@ func attack():
 func _on_area_2d_body_entered(body):
 	if body.name == "Player2":
 		print("Player2 hit")
+
+
+func _on_timer_dodge_timeout():
+	pass # Replace with function body.

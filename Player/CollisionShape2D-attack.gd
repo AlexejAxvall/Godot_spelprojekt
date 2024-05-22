@@ -27,7 +27,7 @@ func _ready():
 
 func _process(delta):
 	var animation_player = get_parent().get_parent().get_node("AnimationPlayer")
-	if animation_player:
+	if animation_player :
 		var current_anim_name = animation_player.get_current_animation()
 		if current_anim_name == "Grounded-neutral-attack":
 			var anim_position = animation_player.get_current_animation_position()

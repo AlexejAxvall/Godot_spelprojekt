@@ -37,7 +37,7 @@ func handle_frame_logic(frame):
 		is_dodge_active = true
 		hide_hitbox()
 		print("Hitbox activated at frame:", frame)
-	elif frame == 10 and is_dodge_active:
+	elif frame == 3 and is_dodge_active:
 		is_dodge_active = false
 		show_hitbox()
 		print("Hitbox deactivated at frame:", frame)
