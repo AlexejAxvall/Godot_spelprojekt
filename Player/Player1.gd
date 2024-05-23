@@ -104,6 +104,7 @@ func _physics_process(delta):
 		
 		if Input.is_action_just_pressed("Player1_dodge") and animation.current_animation not in attacks["Grounded_attacks"] and animation.current_animation not in attacks["Airborne_attacks"]:
 			var Player1_hitbox = get_node("Area2D(hitbox)/Player1_hitbox")
+			Player1_hitbox.hide_hitbox()
 			#Player1_hitbox.
 		
 		var direction_left_right = Input.get_axis("Player1_go_left", "Player1_go_right")
@@ -228,4 +229,4 @@ func _on_area_2d_body_entered(body):
 
 
 func _on_timer_dodge_timeout():
-	pass # Replace with function body.
+	pass

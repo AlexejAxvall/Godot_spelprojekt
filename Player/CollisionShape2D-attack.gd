@@ -8,10 +8,13 @@ var the_position
 var flip
 var angle
 
+var is_attack_animation = false
+
 func get_attack_info(_position, _flip, _angle):
 	the_position = _position
 	flip = _flip
 	angle = _angle
+	is_attack_animation = true
 
 func show_hitbox():
 	disabled = false
@@ -27,9 +30,9 @@ func _ready():
 
 func _process(delta):
 	var animation_player = get_parent().get_parent().get_node("AnimationPlayer")
-	if animation_player :
+	if animation_player:
 		var current_anim_name = animation_player.get_current_animation()
-		if current_anim_name == "Grounded-neutral-attack":
+		if is_attack_animation:
 			var anim_position = animation_player.get_current_animation_position()
 			var anim_length = animation_player.get_current_animation_length()
 			var animation = animation_player.get_animation(current_anim_name)
@@ -53,6 +56,7 @@ func handle_frame_logic(frame):
 		is_attack_active = false
 		hide_hitbox()
 		rotate_self(angle)
+		is_attack_animation = false
 	elif is_attack_active:
 		change_hitbox(frame)
 
@@ -60,7 +64,7 @@ func change_hitbox(frame):
 	if shape is CapsuleShape2D:
 		var initial_radius = 5
 		var initial_height = 2 * initial_radius
-		var new_height = initial_height + (frame - 1) * 5
+		var new_height = initial_height + (frame - 1) * 10
 		#var new_radius = initial_radius + (frame - 1) * 0.5
 
 		var height_change = new_height - shape.height
