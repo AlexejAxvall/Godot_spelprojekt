@@ -4,17 +4,23 @@ var is_attack_active = false
 var last_frame_processed = -1
 var frame_count
 
-var the_position
-var flip
-var angle
+var the_position: Vector2
+var angle: float
+var direction: Vector2
+var initial_position: Vector2
 
 var is_attack_animation = false
 
-func get_attack_info(_position, _flip, _angle):
+func get_attack_info(_position: Vector2, _angle: float):
 	the_position = _position
-	flip = _flip
 	angle = _angle
 	is_attack_animation = true
+	is_attack_active = false
+
+	# Calculate the initial direction based on the angle
+	var angle_radians: float = deg_to_rad(angle - 90)
+	direction = Vector2(cos(angle_radians), sin(angle_radians))
+	initial_position = _position
 
 func show_hitbox():
 	disabled = false
@@ -50,13 +56,7 @@ func handle_frame_logic(frame):
 		change_hitbox(frame)
 		rotate_self(angle)
 	elif frame == frame_count and is_attack_active:
-		self.position = Vector2(0, -10)
-		shape.height = 10
-		shape.radius = 5
-		is_attack_active = false
-		hide_hitbox()
-		rotate_self(angle)
-		is_attack_animation = false
+		reset_hitbox()
 	elif is_attack_active:
 		change_hitbox(frame)
 
@@ -65,16 +65,27 @@ func change_hitbox(frame):
 		var initial_radius = 5
 		var initial_height = 2 * initial_radius
 		var new_height = initial_height + (frame - 1) * 10
-		#var new_radius = initial_radius + (frame - 1) * 0.5
 
-		var height_change = new_height - shape.height
-		var new_position_offset = -flip * Vector2(height_change / 2, 0)
+		var height_change = new_height - initial_height  # Calculate total height change from initial
+		var offset_change = direction * height_change / 2
 
-		self.position -= new_position_offset
+		# Use initial position and offset only
+		self.position = initial_position + offset_change
+		print("Offset_change = " + str(offset_change) + " for frame: " + str(frame))
+		print("Self.position = " + str(self.position) + " for frame: " + str(frame))
+
 		shape.height = new_height
-		#shape.radius = new_radius
 	else:
 		pass
 
 func rotate_self(_angle):
 	rotation_degrees = _angle
+
+func reset_hitbox():
+	self.position = Vector2(0, -10)
+	shape.height = 10
+	shape.radius = 5
+	is_attack_active = false
+	hide_hitbox()
+	rotate_self(angle)
+	is_attack_animation = false

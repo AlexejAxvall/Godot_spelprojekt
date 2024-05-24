@@ -24,32 +24,32 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var flip = 1
 var attacks = {
 	"Grounded_attacks" : {
-		"Grounded-neutral-attack" : {"frames" : 10, "position" : -10, "angle" : 90, "force" : 100, "damage" : 10},
-		"Grounded-up-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
-		"Grounded-down-attack" : {"frames" : 10, "position" : -10, "angle" : 45, "force" : 100, "damage" : 10},
-		"Grounded-left-attack" : {"frames" : 10, "position" : -10, "angle" : 45, "force" : 100, "damage" : 10},
-		"Grounded-right-attack" : {"frames" : 10, "position" : -10, "angle" : 45, "force" : 100, "damage" : 10},
-		"Grounded-up-left-attack" : {"frames" : 10, "position" : -10, "angle" : 22.5, "force" : 100, "damage" : 10},
-		"Grounded-down-left-attack" : {"frames" : 10, "position" : -10, "angle" : 67.5, "force" : 100, "damage" : 10},
-		"Grounded-up-right-attack" : {"frames" : 10, "position" : -10, "angle" : 22.5, "force" : 100, "damage" : 10},
-		"Grounded-down-right-attack" : {"frames" : 10, "position" : -10, "angle" : 22.5, "force" : 100, "damage" : 10},
-		"Grounded-running-up-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
-		"Grounded-running-down-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
-		"Grounded-running-left-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
-		"Grounded-running-right-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10}
+		"Grounded-neutral-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 90, "force" : 100, "damage" : 10},
+		"Grounded-up-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 45, "force" : 100, "damage" : 10},
+		"Grounded-down-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 135, "force" : 100, "damage" : 10},
+		"Grounded-left-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 45, "force" : 100, "damage" : 10},
+		"Grounded-right-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 45, "force" : 100, "damage" : 10},
+		"Grounded-up-left-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 22.5, "force" : 100, "damage" : 10},
+		"Grounded-down-left-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 67.5, "force" : 100, "damage" : 10},
+		"Grounded-up-right-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 22.5, "force" : 100, "damage" : 10},
+		"Grounded-down-right-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 22.5, "force" : 100, "damage" : 10},
+		"Grounded-running-up-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-running-down-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-running-left-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 0, "force" : 100, "damage" : 10},
+		"Grounded-running-right-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 0, "force" : 100, "damage" : 10}
 	}
 	,
 	
 	"Airborne_attacks" : {
-		"Airborne-neutral-attack" : {"frames" : 10, "position" : -10, "angle" : 67.5, "force" : 10, "damage" : 10},
-		"Airborne-up-attack" : {"frames" : 10, "position" : -10, "angle" : 22.5, "force" : 100, "damage" : 10},
-		"Airborne-down-attack" : {"frames" : 10, "position" : -10, "angle" : 90, "force" : 100, "damage" : 10},
-		"Airborne-left-attack" : {"frames" : 10, "position" : -10, "angle" : 45, "force" : 100, "damage" : 10},
-		"Airborne-right-attack" : {"frames" : 10, "position" : -10, "angle" : 45, "force" : 100, "damage" : 10},
-		"Airborne-up-left-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
-		"Airborne-down-left-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
-		"Airborne-up-right-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10},
-		"Airborne-down-right-attack" : {"frames" : 10, "position" : -10, "angle" : 0, "force" : 100, "damage" : 10}
+		"Airborne-neutral-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 67.5, "force" : 10, "damage" : 10},
+		"Airborne-up-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 22.5, "force" : 100, "damage" : 10},
+		"Airborne-down-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 90, "force" : 100, "damage" : 10},
+		"Airborne-left-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 45, "force" : 100, "damage" : 10},
+		"Airborne-right-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 45, "force" : 100, "damage" : 10},
+		"Airborne-up-left-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 0, "force" : 100, "damage" : 10},
+		"Airborne-down-left-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 0, "force" : 100, "damage" : 10},
+		"Airborne-up-right-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 0, "force" : 100, "damage" : 10},
+		"Airborne-down-right-attack" : {"frames" : 10, "position" : Vector2(0, -10), "angle" : 0, "force" : 100, "damage" : 10}
 	}
 }
 
@@ -138,7 +138,7 @@ func _physics_process(delta):
 			if velocity.y == 0 and velocity.x == 0 and is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
 				animation.play("Idle")
 		
-		if not is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"]:
+		if not is_on_floor() and animation.current_animation not in attacks["Grounded_attacks"] and animation.current_animation not in attacks["Airborne_attacks"]:
 			animation.play("Jump")
 		
 		#if hanging:
@@ -152,7 +152,8 @@ func _physics_process(delta):
 			animation.play(attack())
 			var attack_box = get_node("Area2D(attack_box)").get_node("CollisionShape2D-attack")
 			grounded_or_airborne = "Grounded_attacks" if is_on_floor() else "Airborne_attacks"
-			attack_box.get_attack_info(attacks[grounded_or_airborne][attack()]["position"], flip, attacks[grounded_or_airborne][attack()]["angle"])
+			attack_box.get_attack_info(attacks[grounded_or_airborne][attack()]["position"], attacks[grounded_or_airborne][attack()]["angle"] * flip)
+			print(attack())
 			print(attacks[grounded_or_airborne][attack()]["angle"])
 			
 		if tumbling and is_on_floor() and not tekk:
